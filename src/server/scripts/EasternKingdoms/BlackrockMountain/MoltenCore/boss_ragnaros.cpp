@@ -148,7 +148,10 @@ public:
                         case EVENT_INTRO_4:
                             Talk(SAY_ARRIVAL5_RAG);
                             if (Creature* executus = ObjectAccessor::GetCreature(*me, instance->GetGuidData(BOSS_MAJORDOMO_EXECUTUS)))
+                            {
                                 Unit::Kill(me, executus);
+                                executus->DespawnOrUnsummon(18000);
+                            }
                             break;
                         case EVENT_INTRO_5:
                             me->SetReactState(REACT_AGGRESSIVE);
@@ -162,7 +165,7 @@ public:
             }
             else
             {
-                if (_isBanished && ((_emergeTimer <= diff) || (instance->GetData(DATA_RAGNAROS_ADDS)) > 8))
+                if (_isBanished && ((_emergeTimer <= diff) || (instance->GetData(DATA_RAGNAROS_ADDS)) >= 8))
                 {
                     //Become unbanished again
                     me->SetReactState(REACT_AGGRESSIVE);
