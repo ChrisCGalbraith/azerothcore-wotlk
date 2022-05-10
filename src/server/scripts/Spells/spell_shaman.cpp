@@ -46,6 +46,7 @@ enum ShamanSpells
     SPELL_SHAMAN_GLYPH_OF_THUNDERSTORM          = 62132,
     SPELL_SHAMAN_ITEM_LIGHTNING_SHIELD          = 23552,
     SPELL_SHAMAN_ITEM_LIGHTNING_SHIELD_DAMAGE   = 27635,
+    SPELL_SHAMAN_ITEM_LIGHTNING_SHIELD_MANA     = 28820,
     SPELL_SHAMAN_ITEM_MANA_SURGE                = 23571,
     SPELL_SHAMAN_LAVA_FLOWS_R1                  = 51480,
     SPELL_SHAMAN_LAVA_FLOWS_TRIGGERED_R1        = 64694,
@@ -1055,6 +1056,29 @@ class spell_sha_sentry_totem : public AuraScript
     void Register() override
     {
         AfterEffectRemove += AuraEffectRemoveFn(spell_sha_sentry_totem::AfterRemove, EFFECT_1, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL);
+    }
+};
+
+// 28820
+class spell_sha_item_t3_8p_bonus : public AuraScript
+{
+    PrepareAuraScript(spell_sha_item_t3_8p_bonus);
+
+    bool Validate(SpellInfo const* /*spell*/) override
+    {
+        return ValidateSpellInfo({ SPELL_SHAMAN_ITEM_LIGHTNING_SHIELD_MANA });
+    }
+
+    void AfterRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
+    {
+        if (Unit* caster = GetCaster())
+            if (caster->GetTypeId() == TYPEID_PLAYER)
+                caster->ToPlayer()->RemoveAurasDueToSpell(SPELL_SHAMAN_ITEM_LIGHTNING_SHIELD_MANA);
+    }
+
+    void Register() override
+    {
+        AfterEffectRemove += AuraEffectRemoveFn(spell_sha_item_t3_8p_bonus::AfterRemove, EFFECT_1, SPELL_AURA_MOD_POWER_REGEN, AURA_EFFECT_HANDLE_REAL);
     }
 };
 
